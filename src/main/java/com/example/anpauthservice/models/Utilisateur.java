@@ -1,28 +1,24 @@
 package com.example.anpauthservice.models;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
-@NoArgsConstructor
-@Data
+@Setter
 public class Utilisateur implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long userId;
-
     private String nom;
     private String prenom;
     private String adresse;
@@ -30,9 +26,7 @@ public class Utilisateur implements UserDetails {
     @Email
     @Column(name = "username", unique = true)
     private String username;
-
-    private  String email;
-
+    private  String email = this.username;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -42,18 +36,35 @@ public class Utilisateur implements UserDetails {
     )
     private Set<Role> authorities;
 
+    public Utilisateur() {
+        super();
+        authorities = new HashSet<>();
+    }
+
     public Utilisateur(String nom, String prenom, String adresse, String username, String password, Set<Role> authorities){
         this.nom =nom;
         this.prenom =prenom;
         this.adresse = adresse;
         this.username =username;
         this.password = password;
-        this.authorities =authorities;
+        this.authorities = authorities;
+        this.email = this.username;
     }
 
+    public Long getUserId() {
+        return this.userId;
+    }
+
+    public void setId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities(){
         return this.authorities;
     }
 

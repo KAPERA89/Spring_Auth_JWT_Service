@@ -21,18 +21,19 @@ public class AnpAuthServiceApplication {
         SpringApplication.run(AnpAuthServiceApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner run(RoleRepository roleRepository,
+    //@Bean
+    CommandLineRunner run(
+                          RoleRepository roleRepository,
                           UtilisateurRepository utilisateurRepository,
                           PasswordEncoder passwordEncoder){
         return args -> {
             //if(roleRepository.findByAuthoriry("VALIDATEUR").isPresent()) return;
-            Role validateurRole = roleRepository.save(new Role("VALIDATEUR"));
-
+            //Role validateurRole = roleRepository.save(new Role("VALIDATEUR"));
+            Role validateurRole = roleRepository.findByAuthoriry("VALIDATEUR").get();
             Set<Role> roles = new HashSet<>();
             roles.add(validateurRole);
 
-            Utilisateur validateur = new Utilisateur("othmaneVAL2", "darhoniVal2", "adresseVal2", "othmaneVal2@gmail.com", passwordEncoder.encode("password1234"), roles);
+            Utilisateur validateur = new Utilisateur("othmaneVAL3", "darhoniVal3", "adresseVal3", "othmaneVal3@gmail.com", passwordEncoder.encode("password123"), roles);
             utilisateurRepository.saveWithUsername(validateur);
         };
     }
