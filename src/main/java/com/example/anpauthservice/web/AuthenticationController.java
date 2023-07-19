@@ -2,9 +2,11 @@ package com.example.anpauthservice.web;
 
 import com.example.anpauthservice.DTOs.LoginDTO;
 import com.example.anpauthservice.DTOs.RegisterDTO;
+import com.example.anpauthservice.DTOs.UserProfileDTO;
 import com.example.anpauthservice.models.Utilisateur;
 import com.example.anpauthservice.services.AuthentificationService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,4 +32,6 @@ public class AuthenticationController {
     public LoginDTO loginUser(@RequestBody RegisterDTO body){
         return authentificationService.loginUser(body.getUsername(), body.getPassword());
     }
+
+
 }

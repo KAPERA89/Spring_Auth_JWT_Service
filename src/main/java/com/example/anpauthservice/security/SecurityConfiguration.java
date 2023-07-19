@@ -26,6 +26,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfiguration {
@@ -56,9 +58,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                         auth.requestMatchers("/api/auth/**").permitAll();
                         auth.requestMatchers("/validateur/**").hasRole("VALIDATEUR");
-                        auth.requestMatchers("/user/**").hasAnyRole("VALIDATEUR","USER");
+//                        auth.requestMatchers("/user/**").hasAnyRole("VALIDATEUR","USER");
+                        auth.requestMatchers("/user/**").hasRole("USER");
                         auth.anyRequest().authenticated();
                     });
+
          http
                 .oauth2ResourceServer()
                 .jwt()

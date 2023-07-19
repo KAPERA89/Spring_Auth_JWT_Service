@@ -1,11 +1,14 @@
 package com.example.anpauthservice.services;
 
 import com.example.anpauthservice.DTOs.LoginDTO;
+import com.example.anpauthservice.DTOs.UserProfileDTO;
 import com.example.anpauthservice.models.Role;
 import com.example.anpauthservice.models.Utilisateur;
 import com.example.anpauthservice.repositories.RoleRepository;
 import com.example.anpauthservice.repositories.UtilisateurRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,5 +53,9 @@ public class AuthentificationService {
         } catch(AuthenticationException e){
             return new LoginDTO(null, "");
         }
+    }
+
+    public UserProfileDTO profile(String username){
+        return new UserProfileDTO(utilisateurRepository.findByUsername(username).get());
     }
 }
