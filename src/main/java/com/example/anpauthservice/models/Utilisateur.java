@@ -1,7 +1,9 @@
 package com.example.anpauthservice.models;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,10 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
+@Getter
 @Setter
 public class Utilisateur implements UserDetails {
 
@@ -35,6 +39,12 @@ public class Utilisateur implements UserDetails {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> authorities;
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Facture> factureList;
+
+    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+    private List<Releve> releveList;
 
     public Utilisateur() {
         super();

@@ -8,12 +8,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class AnpAuthServiceApplication {
 
     public static void main(String[] args) {
@@ -29,11 +31,12 @@ public class AnpAuthServiceApplication {
         return args -> {
             //if(roleRepository.findByAuthoriry("VALIDATEUR").isPresent()) return;
             //Role validateurRole = roleRepository.save(new Role("VALIDATEUR"));
+            //roleRepository.save(new Role("USER"));
             Role validateurRole = roleRepository.findByAuthoriry("VALIDATEUR").get();
             Set<Role> roles = new HashSet<>();
             roles.add(validateurRole);
 
-            Utilisateur validateur = new Utilisateur("othmaneVAL3", "darhoniVal3", "adresseVal3", "othmaneVal3@gmail.com", passwordEncoder.encode("password123"), roles);
+            Utilisateur validateur = new Utilisateur("othmaneVAL2", "darhoniVal2", "adresseVal2", "othmaneVal2@gmail.com", passwordEncoder.encode("password1234"), roles);
             utilisateurRepository.saveWithUsername(validateur);
         };
     }

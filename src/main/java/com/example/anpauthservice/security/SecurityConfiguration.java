@@ -7,14 +7,14 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,16 +26,21 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class SecurityConfiguration {
 
     private final RSAKeyProperties keys;
 
     public SecurityConfiguration(RSAKeyProperties keys){
         this.keys = keys;
+    }
+
+
+    @Bean
+    public AuditorAware<String> auditorAware(){
+        return new SpringSecurityAuditorAware();
     }
 
     @Bean
@@ -58,7 +63,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                         auth.requestMatchers("/api/auth/**").permitAll();
                         auth.requestMatchers("/validateur/**").hasRole("VALIDATEUR");
-//                        auth.requestMatchers("/user/**").hasAnyRole("VALIDATEUR","USER");
+                        //auth.requestMatchers("/user/**").hasAnyRole("VALIDATEUR","USER");
                         auth.requestMatchers("/user/**").hasRole("USER");
                         auth.anyRequest().authenticated();
                     });
